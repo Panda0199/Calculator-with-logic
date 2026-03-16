@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'controller/CalculatorController.dart';
+import 'converter_page.dart';
+import 'history_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,68 +18,123 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class CalculatorPage extends StatelessWidget {
+class CalculatorPage extends StatefulWidget {
+  @override
+  State<CalculatorPage> createState() => _CalculatorPageState();
+}
+
+class _CalculatorPageState extends State<CalculatorPage> {
+  final CalculatorController controller = CalculatorController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller.loadHistory();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Calculator"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HistoryPage(controller: controller),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.swap_horiz),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ConverterPage()),
+              );
+            },
+          ),
+        ],
+      ),
       backgroundColor: Colors.black,
-        body: Padding(
-          padding: EdgeInsets.only(bottom: 40, top: 40),
-          child: Column(
-          children: [
-          Expanded(
-          child: Container(
-          color: Colors.white, // <-- add this
-          alignment: Alignment.bottomRight,
-               padding: EdgeInsets.all(30),
-            child: Text(
-           "0",
+      body: Padding(
+      padding: EdgeInsets.only(bottom: 40, top: 40),
+      child: Column(
+      children: [
+      Expanded(
+         child: Container(
+         color: Colors.white,
+        alignment: Alignment.bottomRight,
+          padding: EdgeInsets.all(30),
+         child: ValueListenableBuilder<String>(
+           valueListenable: controller.display,
+          builder: (context, value, _) {
+           return Text(
+           value,
            style: TextStyle(
            fontSize: 40,
-           color: Colors.black, // text visible on white
-                  ),
-                ),
-              ),
+           color: Colors.black,
+           ),
+           );
+            },
+             ),
+           ),
             ),
-
-
-          // Buttons
-          Row(
-            children: [
-              button("7"), button("8"), button("9"), button("%"),
-            ],
-          ),
-          Row(
-            children: [
-              button("4"), button("5"), button("6"), button("*"),
-            ],
-          ),
-          Row(
-            children: [
-              button("1"), button("2"), button("3"), button("-"),
-            ],
-          ),
-          Row(
-            children: [button("0"), button("."), button("="), button("+"),
-            ],
-          ),
-         ],
-         ),
+        Row(
+          children: [button("C"), button("O"), button("L"), button("D"),
+          ],
         ),
-      );
-   }
 
-    Widget button(String text) {
+
+        Row(
+              children: [
+                button("7"), button("8"), button("9"), button("%"), // % = Clear
+              ],
+            ),
+            Row(
+              children: [
+                button("4"), button("5"), button("6"), button("*"),
+              ],
+            ),
+            Row(
+              children: [
+                button("1"), button("2"), button("3"), button("-"),
+              ],
+            ),
+            Row(
+              children: [
+                button("0"), button("."), button("="), button("+"),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget button(String text) {
     return Expanded(
       child: Padding(
-   padding: EdgeInsets.all(8),
-     child: ElevatedButton(
-    style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.grey[800],
+        padding: EdgeInsets.all(8),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.grey[800],
             shape: CircleBorder(),
             padding: EdgeInsets.all(20),
           ),
-          onPressed: () {},
+          onPressed: () {
+            controller.press(text);
+          },
           child: Text(
             text,
             style: TextStyle(
@@ -89,5 +147,3 @@ class CalculatorPage extends StatelessWidget {
     );
   }
 }
-
-
