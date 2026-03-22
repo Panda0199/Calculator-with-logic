@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1004560850760",
+    "firebase_url": "https://anik-joy-firebase-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "anik-joy-firebase",
+    "storage_bucket": "anik-joy-firebase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004560850760:android:89d2c7ad5bab006a389d7d",
+        "android_client_info": {
+          "package_name": "com.example.calculatoor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXXg-pRszMR4tM-etPT3QdOhr9LTKAjIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

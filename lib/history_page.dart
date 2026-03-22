@@ -12,17 +12,28 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   @override
+  void initState() {
+    super.initState();
+    load();
+  }
+
+  Future<void> load() async {
+    await widget.controller.loadHistory();
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("History"),
         actions: [
           IconButton(
+            icon: const Icon(Icons.delete),
             onPressed: () async {
               await widget.controller.clearHistory();
               setState(() {});
             },
-            icon: const Icon(Icons.delete),
           ),
         ],
       ),

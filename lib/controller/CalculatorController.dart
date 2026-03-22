@@ -24,14 +24,14 @@ class CalculatorController {
   final CalculatorModel _m = CalculatorModel();
   final ValueNotifier<String> display = ValueNotifier<String>("0");
 
-  void press(String text) {
+  Future<void> press(String text) async {
     if (text == "C") {
       _clearAll();
       return;
     }
 
     if (text == "=") {
-      _calculate();
+      await _calculate();
       return;
     }
 
@@ -93,7 +93,8 @@ class CalculatorController {
       _m.first = s;
     }
   }
-  void _calculate() {
+  Future<void> _calculate() async {
+    print("CALCULATE TRIGGERED");
 
     if (!_m.hasFirst || !_m.hasOp || !_m.hasSecond) {
       _updateDisplayFromModel();
@@ -133,15 +134,14 @@ class CalculatorController {
     final resultText = _format(result);
     display.value = resultText;
 
-    history.insert(
-      0,
-      HistoryItem(
-        calculation: "${_m.first} ${_m.op} ${_m.second} = $resultText",
-        time: _currentTime(),
-      ),
+    final item = HistoryItem(
+      calculation: "${_m.first} ${_m.op} ${_m.second} = $resultText",
+      time: _currentTime(),
     );
 
-    _storage.saveHistory(history);
+    history.insert(0, item);
+    print("SAVING TO FIRESTORE: ${item.calculation}");
+    await _storage.addHistory(item);
 
     _m.first = resultText;
     _m.second = "";
